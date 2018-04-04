@@ -5,6 +5,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const osName = require('os-name')
+const cmd = require('node-cmd')
 
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -39,9 +40,30 @@ app.post('/open', (req, res) => {
                 open(url)    
         }
     setTimeout(() => {
+            res.status(200);
             res.send('opening url : '+url)
         }, timeout*1000)
     }
 })
 
+
+app.post('/version', (req, res) => {
+    const isPatch = typeof req['body']['isPatch'] !== 'undefined' ?  req['body']['isPatch'] : false;
+    if (isPatch) {
+        console.log('Patching Application...');
+        cmd.get('cd ../sbx-webclient; pwd; npm version patch', (err, stdout, stderr)=> {
+                const result = { 
+                        err: err,
+                        out: stdout,
+                        derr: stderr
+                }
+                res.status(200);
+                res.send(result);
+        })
+    } else {
+        console.log('Malformed request');
+        res.status(400);
+        res.send('Malformed request');
+    }
+})
 app.listen(4444, () => console.log(' Server running on port 4444'))
