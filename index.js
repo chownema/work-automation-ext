@@ -51,8 +51,9 @@ app.post('/version', (req, res) => {
     const isPatch = typeof req['body']['isPatch'] !== 'undefined' ?  req['body']['isPatch'] : false;
     if (isPatch) {
         console.log('Patching Application...');
-        cmd.get('cd ../sbx-webclient-php; pwd; npm version patch', (err, stdout, stderr)=> {
-                const result = { 
+        // Works on a windows machine
+        cmd.get('cd ../ && cd sbx-webclient-php && pwd && npm version patch', (err, stdout, stderr)=> {
+                const result = {
                         err: err,
                         out: stdout,
                         derr: stderr
