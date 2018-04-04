@@ -16,6 +16,7 @@ app.post('/open', (req, res) => {
     const isFF = typeof req['body']['isFF'] !== 'undefined' ?  req['body']['isFF'] : false;
     const isEdge = typeof req['body']['isEdge'] !== 'undefined' ?  req['body']['isEdge'] : false;
     const isChrome = typeof req['body']['isChrome'] !== 'undefined' ?  req['body']['isChrome'] : false;
+    const isIExplorer = typeof req['body']['isIExplorer'] !== 'undefined' ?  req['body']['isIExplorer'] : false;
 
     const osId = osName();
     const isOsx = osId.includes('macOs');
@@ -32,6 +33,7 @@ app.post('/open', (req, res) => {
                 if (isFF) opn(url, {app: 'firefox'})
                 else if (isEdge) opn(url, {app: 'edge'})
                 else if (isChrome) opn(url, {app: 'chrome'})
+                else if (isIExplorer) opn(url, {app: 'iexplore'})
                 else opn(url) 
         } else {
                 open(url)    
