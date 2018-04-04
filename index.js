@@ -14,6 +14,7 @@ app.post('/open', (req, res) => {
     const timeout = typeof req['body']['timeout'] !== 'undefined' ?  req['body']['timeout'] : 30;
     const isSafari = typeof req['body']['isSafari'] !== 'undefined' ?  req['body']['isSafari'] : false;
     const isFF = typeof req['body']['isFF'] !== 'undefined' ?  req['body']['isFF'] : false;
+    const isEdge = typeof req['body']['isEdge'] !== 'undefined' ?  req['body']['isFF'] : false;
 
     const osId = osName();
     const isOsx = osId.includes('macOs');
