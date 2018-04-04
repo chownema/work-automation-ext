@@ -52,7 +52,7 @@ app.post('/version', (req, res) => {
     if (isPatch) {
         console.log('Patching Application...');
         // Works on a windows machine
-        cmd.get('cd ../ && cd sbx-webclient-php && pwd && git pull && npm version patch', (err, stdout, stderr)=> {
+        cmd.get('cd ../ && cd sbx-webclient-php && echo %cd% && git pull && npm version patch', (err, stdout, stderr)=> {
                 const result = {
                         err: err,
                         out: stdout,
