@@ -1,8 +1,10 @@
-const open = require('open');
+const open = require('open')
+const opn = require('opn')
 const mOpen = require('mac-open')
 const express = require('express')
 const app = express()
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
+const osName = require('os-name')
 
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -13,19 +15,29 @@ app.post('/open', (req, res) => {
     const isSafari = typeof req['body']['isSafari'] !== 'undefined' ?  req['body']['isSafari'] : false;
     const isFF = typeof req['body']['isFF'] !== 'undefined' ?  req['body']['isFF'] : false;
 
-    console.log('opening', req.body.url)
+    const osId = osName();
+    const isOsx = osId.includes('macOs');
+    const isWindows = osId.includes('Windows');
+
+    console.log('opening', req.body.url, osId);
     if (url) {
-        if (isSafari) {
-                mOpen(url, { a: 'safari' }, (err)=>{ console.error() })
-        } else if (isFF) {
-                mOpen(url, { a: 'firefox' }, (err)=>{ console.error() })
+        if (isOsx) {
+                if (isSafari) mOpen(url, { a: 'safari' }, (err)=>{ console.error() })
+                else if (isFF) mOpen(url, { a: 'firefox' }, (err)=>{ console.error() })
+                else if (isChrome) mOpen(url, {app: 'google chrome'})
+                else open(url)
+        } else if (isWindows) {
+                if (isFF) opn(url, {app: 'firefox'})
+                else if (isEdge) opn(url, {app: 'edge'})
+                else if (isChrome) opn(url, {app: 'chrome'})
+                else opn(url) 
         } else {
-                open(url)
+                open(url)    
         }
     setTimeout(() => {
-            res.send('opening url.....')
+            res.send('opening url : '+url)
         }, timeout*1000)
     }
 })
 
-app.listen(4444, () => console.log('4444'))
+app.listen(4444, () => console.log(' Server running on port 4444'))
