@@ -6,9 +6,59 @@ const app = express()
 const bodyParser = require('body-parser')
 const osName = require('os-name')
 const cmd = require('node-cmd')
+const webdriver = require('selenium-webdriver')
+const chrome = require('selenium-webdriver/chrome')
+const firefox = require('selenium-webdriver/firefox')
+// const scriptTakeControl = require('./webdriver-scripts/take-control');
+// require('chromedriver');
+
+const PythonShell = require('python-shell')
+const winPyShellEntry = 'selenium-win/index.py'
+const winPyShellChromeDriver = 'selenium-win/chromedriver'
 
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.post('/webdriver', (req, res) => {
+    const url = req['body']['url'];
+    const timeout = typeof req['body']['timeout'] !== 'undefined' ?  req['body']['timeout'] : 30;
+    console.log('webdriver opening', url);
+    
+    const options = {
+        args : [url, winPyShellChromeDriver]
+    }
+    const winPyShell = PythonShell.run(winPyShellEntry, options, (err, results)=>{
+        if (err) console.log(err)
+        console.log(results)
+    })
+
+	// const driver = new webdriver.Builder()
+	//    .forBrowser('chrome')
+	//    .build();
+	// console.log(driver)
+	// const actions = driver.actions()
+	// driver.get(url);
+    //     actions
+	// 	.keyDown(webdriver.Key.TAB)
+    //     	.keyDown(webdriver.Key.ENTER)
+    //     	.perform();
+
+    
+    // end the input stream and allow the process to exit
+    winPyShell.end(function (err,code,signal) {
+        if (err) throw err;
+        console.log('The exit code was: ' + code)
+        console.log('The exit signal was: ' + signal)
+        console.log('finished')
+        const result = {
+            message : err ? err : 'finished',
+            code : code,
+            signal : signal,
+            url : url
+        }
+        res.send(result)
+    })
+})
 
 app.post('/open', (req, res) => {
     const url = req['body']['url'];
@@ -67,4 +117,6 @@ app.post('/version', (req, res) => {
         res.send('Malformed request');
     }
 })
-app.listen(4444, () => console.log(' Server running on port 4444'))
+
+const port = 4444
+app.listen(port, () => console.log(' Server running on port '+port))

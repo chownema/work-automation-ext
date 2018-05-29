@@ -1,1 +1,6 @@
 node_modules/
+.index.js.swp
+debug.log
+package-lock.json
+*.pyc
+*vscode
