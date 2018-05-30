@@ -15,48 +15,47 @@ const firefox = require('selenium-webdriver/firefox')
 const PythonShell = require('python-shell')
 const winPyShellEntry = 'selenium-win/index.py'
 const winPyShellChromeDriver = 'selenium-win/chromedriver'
+const winPyShellRequestFile = 'selenium-win/request_data.json'
 
+const writeFile = require('write');
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/webdriver', (req, res) => {
-    const url = req['body']['url'];
     const timeout = typeof req['body']['timeout'] !== 'undefined' ?  req['body']['timeout'] : 30;
-    console.log('webdriver opening', url);
-    
-    const options = {
-        args : [url, winPyShellChromeDriver]
-    }
-    const winPyShell = PythonShell.run(winPyShellEntry, options, (err, results)=>{
+    // Dict of data for the python to use
+    const data = req['body']['data'];
+    const command = req['body']['command'];
+    const dataString = JSON.stringify(data)
+
+    console.log(dataString)
+
+    writeFile.promise(winPyShellRequestFile, dataString).then((err)=>{
         if (err) console.log(err)
-        console.log(results)
-    })
-
-	// const driver = new webdriver.Builder()
-	//    .forBrowser('chrome')
-	//    .build();
-	// console.log(driver)
-	// const actions = driver.actions()
-	// driver.get(url);
-    //     actions
-	// 	.keyDown(webdriver.Key.TAB)
-    //     	.keyDown(webdriver.Key.ENTER)
-    //     	.perform();
-
-    
-    // end the input stream and allow the process to exit
-    winPyShell.end(function (err,code,signal) {
-        if (err) throw err;
-        console.log('The exit code was: ' + code)
-        console.log('The exit signal was: ' + signal)
-        console.log('finished')
-        const result = {
-            message : err ? err : 'finished',
-            code : code,
-            signal : signal,
-            url : url
+        
+        const options = {
+            args : [winPyShellChromeDriver, command, winPyShellRequestFile]
         }
-        res.send(result)
+        const winPyShell = PythonShell.run(winPyShellEntry, options, (err, results)=>{
+            if (err) console.log(err)
+            console.log(results)
+        })
+
+        
+        // end the input stream and allow the process to exit
+        winPyShell.end(function (err,code,signal) {
+            if (err) throw err;
+            console.log('The exit code was: ' + code)
+            console.log('The exit signal was: ' + signal)
+            console.log('finished')
+            const result = {
+                message : err ? err : 'finished',
+                code : code,
+                signal : signal,
+                url : url
+            }
+            res.send(result)
+        })
     })
 })
 

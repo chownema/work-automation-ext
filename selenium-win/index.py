@@ -1,3 +1,4 @@
+# import selenium
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,44 +7,67 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
-from constants_webclient import ConstantsWebclient
 
+# import other libs
 import pickle
 import time
 import argparse
+import json
+import sys
+# import test constants
+from constants_webclient import ConstantsWebclient
+
+#import test scripts
+from test_scripts.host import Host
+from test_scripts.participant import Participant
 
 CONSTANTS_WEBCLIENT = ConstantsWebclient.get_constants();
 parser = argparse.ArgumentParser()
-parser.add_argument('URL', type=str, help='path to the webclient section for testing')
 parser.add_argument('DRIVER_PATH', type=str, help='path to the driver executable')
-
+parser.add_argument('COMMAND', type=str, help='what will you do with a drunken sailor')
+parser.add_argument('DATA_PATH', type=str, help='what will you do with a drunken sailor')
 
 ARGS = parser.parse_args()
-URL = ARGS.URL
 DRIVER_PATH = ARGS.DRIVER_PATH
+
+DATA = {}
+with open(ARGS.DATA_PATH) as data_file:
+    DATA = json.loads(data_file.read())
+COMMAND = DATA['command']
 
 chrome_options = Options()
 chrome_options.add_argument('--use-fake-device-for-media-stream')
 chrome_options.add_argument('--use-fake-ui-for-media-stream')
 driver = webdriver.Chrome(DRIVER_PATH, chrome_options=chrome_options)
-time.sleep(3)
-driver.get(URL)
+DATA['DRIVER'] = driver
+print(DATA)
+# time.sleep(3) # For windows to catch up
+# driver.get(URL)
+
+COMMANDS = {
+    'host-login' : Host.login,
+    'participant-login' : Participant.login
+}
+
+commandFunction = COMMANDS[COMMAND]
+commandFunction(**DATA) # dictionary
 # try:
 #     myElem = WebDriverWait(driver, CONSTANTS_WEBCLIENT.PAGE_LOAD_DELAY).until(EC.presence_of_element_located((By.CLASS, CONSTANTS_WEBCLIENT.MEETING_APP_AWAIT_EL_CLS)))
 # except TimeoutException:
 #     print('Loading took too much time!')
 
 # send accross keys to accept webrtc device requests
-time.sleep(18)
-actions = ActionChains(driver)
-actions.send_keys(Keys.TAB)
-actions.send_keys(Keys.TAB)
-actions.send_keys(Keys.RETURN)
-actions.send_keys(Keys.TAB)
-actions.send_keys(Keys.TAB)
-actions.send_keys(Keys.RETURN)
-actions.perform()
-print('action chain performed')
+# time.sleep(18)
+# actions = ActionChains(driver)
+# actions.send_keys(Keys.TAB)
+# actions.send_keys(Keys.TAB)
+# actions.send_keys(Keys.RETURN)
+# actions.send_keys(Keys.TAB)
+# actions.send_keys(Keys.TAB)
+# actions.send_keys(Keys.RETURN)
+# actions.perform()
+# print('action chain performed')
+
 # driver.close()
 # pickle.dump( driver.get_cookies() , open("cookies.pkl","wb"))
 # cookies = pickle.load(open("cookies.pkl", "rb"))
