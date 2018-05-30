@@ -1,1 +1,1 @@
-{"url":"https://192.168.1.20:3000/meeting.php?participant=1&username=sbxtester1@gmail.com&password=FB7YY0","command":"participant-login"}
+{"url":"https://192.168.1.20:3000/client.php?meetingID=11067","username":"miguel@suitebox.com","password":"Sffneo45","command":"host-login"}

@@ -41,8 +41,6 @@ chrome_options.add_argument('--use-fake-ui-for-media-stream')
 driver = webdriver.Chrome(DRIVER_PATH, chrome_options=chrome_options)
 DATA['DRIVER'] = driver
 print(DATA)
-# time.sleep(3) # For windows to catch up
-# driver.get(URL)
 
 COMMANDS = {
     'host-login' : Host.login,
@@ -51,32 +49,3 @@ COMMANDS = {
 
 commandFunction = COMMANDS[COMMAND]
 commandFunction(**DATA) # dictionary
-# try:
-#     myElem = WebDriverWait(driver, CONSTANTS_WEBCLIENT.PAGE_LOAD_DELAY).until(EC.presence_of_element_located((By.CLASS, CONSTANTS_WEBCLIENT.MEETING_APP_AWAIT_EL_CLS)))
-# except TimeoutException:
-#     print('Loading took too much time!')
-
-# send accross keys to accept webrtc device requests
-# time.sleep(18)
-# actions = ActionChains(driver)
-# actions.send_keys(Keys.TAB)
-# actions.send_keys(Keys.TAB)
-# actions.send_keys(Keys.RETURN)
-# actions.send_keys(Keys.TAB)
-# actions.send_keys(Keys.TAB)
-# actions.send_keys(Keys.RETURN)
-# actions.perform()
-# print('action chain performed')
-
-# driver.close()
-# pickle.dump( driver.get_cookies() , open("cookies.pkl","wb"))
-# cookies = pickle.load(open("cookies.pkl", "rb"))
-# for cookie in cookies:
-#     driver.add_cookie(cookie)
-
-# assert "Python" in driver.title
-# elem = driver.find_element_by_name("q")
-# elem.clear()
-# elem.send_keys("pycon")
-# elem.send_keys(Keys.RETURN)
-# assert "No results found." not in driver.page_source
