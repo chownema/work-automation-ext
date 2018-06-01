@@ -22,7 +22,7 @@ const writeFile = require('write');
 app.use(bodyParser.json());
 
 app.post('/webdriver', (req, res) => {
-    const timeout = typeof req['body']['timeout'] !== 'undefined' ?  req['body']['timeout'] : 30;
+    const timeout = typeof req['body']['timeout'] !== 'undefined' ?  req['body']['timeout'] : 5;
     // Dict of data for the python to use
     const data = req['body']['data'];
     const command = req['body']['command'];
@@ -56,7 +56,11 @@ app.post('/webdriver', (req, res) => {
             }
             res.send(result)
         })
-    })
+        setTimeout(() => {
+                res.status(200);
+                res.send('opening url : '+data+command)
+            }, timeout*1000)
+        })
 })
 
 app.post('/open', (req, res) => {
@@ -98,10 +102,13 @@ app.post('/open', (req, res) => {
 
 app.post('/version', (req, res) => {
     const isPatch = typeof req['body']['isPatch'] !== 'undefined' ?  req['body']['isPatch'] : false;
+    const branch = typeof req['body']['branch'] !== 'undefined' ?  req['body']['branch'] : false;
+
     if (isPatch) {
         console.log('Patching Application...');
         // Works on a windows machine
-        cmd.get('cd ../ && cd sbx-webclient-php && echo %cd% && git pull && npm version patch', (err, stdout, stderr)=> {
+        const branchCommand = branch ? '&& git checkout origim/'+branch : '';
+        cmd.get('cd ../ && cd sbx-webclient-php && echo %cd% && git pull'+branchCommand+'&& npm version patch && git checkout orign/release-candidate', (err, stdout, stderr)=> {
                 const result = {
                         err: err,
                         out: stdout,

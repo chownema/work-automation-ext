@@ -20,6 +20,7 @@ from constants_webclient import ConstantsWebclient
 #import test scripts
 from test_scripts.host import Host
 from test_scripts.participant import Participant
+from test_scripts.trial import Trial
 
 CONSTANTS_WEBCLIENT = ConstantsWebclient.get_constants();
 parser = argparse.ArgumentParser()
@@ -44,7 +45,8 @@ print(DATA)
 
 COMMANDS = {
     'host-login' : Host.login,
-    'participant-login' : Participant.login
+    'participant-login' : Participant.login,
+    'trial-sign-up' : Trial.signUp
 }
 
 commandFunction = COMMANDS[COMMAND]
