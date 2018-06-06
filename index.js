@@ -106,9 +106,8 @@ app.post('/version', (req, res) => {
 
     if (isPatch) {
         console.log('Patching Application...');
-        // Works on a windows machine
-        const branchCommand = branch ? '&& git checkout origim/'+branch : '';
-        cmd.get('cd ../ && cd sbx-webclient-php && echo %cd% && git pull'+branchCommand+'&& npm version patch && git checkout orign/release-candidate', (err, stdout, stderr)=> {
+        const branchCommand = branch ? '&& git checkout '+branch+' && git pull ' : '' // get the branch and get the latest from that branch
+        cmd.get('cd ../ && cd sbx-webclient-php && echo %cd% && git pull '+branchCommand+'&& npm version patch && git checkout release-candidate', (err, stdout, stderr)=> {
                 const result = {
                         err: err,
                         out: stdout,
@@ -116,6 +115,7 @@ app.post('/version', (req, res) => {
                 }
                 res.status(200);
                 res.send(result);
+                console.log('result', result);
         })
     } else {
         console.log('Malformed request');
