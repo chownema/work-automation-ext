@@ -18,3 +18,5 @@ run ```npm install && npm run```
 take note of the local network address of the computer you are running it on so that you can send requests to the express api server.
 
 The express api server accepts standard json requests with the header ```Content-Type : application/json```
+
+The root of where all the requests are interpreted is inside the index.js file
