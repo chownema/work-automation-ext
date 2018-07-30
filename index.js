@@ -76,12 +76,12 @@ app.post('/open', (req, res) => {
     const isOsx = osId.includes('macOs');
     const isWindows = osId.includes('Windows');
 
-    console.log('opening', req.body.url, osId);
+    console.log('opening', req.body.url, osId, isSafari);
     if (url) {
         if (isOsx) {
-                if (isSafari) mOpen(url, { a: 'safari' }, (err)=>{ console.error() })
+                if (isSafari) mOpen(url, (err)=>{ console.error() })
                 else if (isFF) mOpen(url, { a: 'firefox' }, (err)=>{ console.error() })
-                else if (isChrome) mOpen(url, {app: 'google chrome'})
+                else if (isChrome) mOpen(url, {a: 'google chrome'})
                 else open(url)
         } else if (isWindows) {
                 if (isFF) opn(url, {app: 'firefox'})
