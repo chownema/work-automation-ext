@@ -1,1 +1,1 @@
-{"loginData":{"url":"https://192.168.1.20:3000/client.php?meetingID=11081","username":"miguel@suitebox.com","password":"Sffneo45"},"url":"https://192.168.1.20:3000/trial.php","fName":"qwe","lName":"123","email":"68cV6PSTFkEo4smYMSjtSA8b@suitebox.com","phone":"123123123","country":"Australia","command":"trial-sign-up"}
+{"url":"https://webclient.suitebox.com/meeting.php?participant=1&username=sbxtester1@gmail.com&password=WHO0K5","command":"participant-login"}

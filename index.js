@@ -85,7 +85,7 @@ app.post('/open', (req, res) => {
                 else open(url)
         } else if (isWindows) {
                 if (isFF) opn(url, {app: 'firefox'})
-                else if (isEdge) opn(url, {app: 'edge'})
+                else if (isEdge) opn(url, {app: 'microsoft-edge:'+url})
                 else if (isChrome) opn(url, {app: 'chrome'})
                 else if (isIExplorer) opn(url, {app: 'iexplore'})
                 else opn(url) 
