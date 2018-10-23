@@ -15,9 +15,37 @@ const firefox = require('selenium-webdriver/firefox')
 const PythonShell = require('python-shell')
 const winPyShellEntry = 'selenium-win/index.py'
 const winPyShellChromeDriver = 'selenium-win/chromedriver'
+const linuxPyShellChromeDriver = 'selenium-linux/chromedriver'; // has to be installed locally
 const winPyShellRequestFile = 'selenium-win/request_data.json'
-
 const writeFile = require('write');
+
+// Constants Env Var
+const OS_ID = osName();
+
+// INIT
+let isWindows = false;
+let isOsx = false;
+let isLinux = false;
+let driverPath = '';
+switch (true) {
+    case OS_ID.toLowerCase().includes('linux'):
+        isLinux = true;
+        driverPath = linuxPyShellChromeDriver;
+        console.log('Linux chrome driver path: ' + driverPath);
+        break;
+    case OS_ID.toLowerCase().includes('macos'):
+        isOsx = true;
+        driverPath = linuxPyShellChromeDriver; // not implemented yet
+        console.log('OSX : webdriver not currently supported');
+        break;
+    case OS_ID.toLowerCase().includes('windows'):
+        isWindows = true;
+        driverPath = winPyShellRequestFile;
+        console.log('Windows chrome driver path: ' + driverPath);
+        break;
+}
+// INIT
+
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -27,40 +55,37 @@ app.post('/webdriver', (req, res) => {
     const data = req['body']['data'];
     const command = req['body']['command'];
     const dataString = JSON.stringify(data)
-
-    console.log(dataString)
+    console.log(dataString);
 
     writeFile.promise(winPyShellRequestFile, dataString).then((err)=>{
-        if (err) console.log(err)
-        
+        if (err) console.log(err);
         const options = {
-            args : [winPyShellChromeDriver, command, winPyShellRequestFile]
-        }
+            args : [driverPath, command, winPyShellRequestFile]
+        };
         const winPyShell = PythonShell.run(winPyShellEntry, options, (err, results)=>{
             if (err) console.log(err)
-            console.log(results)
-        })
+            console.log(results);
+        });
 
-        
         // end the input stream and allow the process to exit
         winPyShell.end(function (err,code,signal) {
             if (err) throw err;
-            console.log('The exit code was: ' + code)
-            console.log('The exit signal was: ' + signal)
-            console.log('finished')
+            console.log('The exit code was: ' + code);
+            console.log('The exit signal was: ' + signal);
+            console.log('finished');
             const result = {
                 message : err ? err : 'finished',
                 code : code,
                 signal : signal,
-                url : url
-            }
-            res.send(result)
-        })
+                request : req
+            };
+            res.send(result);
+        });
         setTimeout(() => {
                 res.status(200);
-                res.send('opening url : '+data+command)
-            }, timeout*1000)
-        })
+                res.send('opening url : '+data+command);
+            }, timeout*1000);
+        });
 })
 
 app.post('/open', (req, res) => {
@@ -76,7 +101,7 @@ app.post('/open', (req, res) => {
     const isOsx = osId.includes('macOs');
     const isWindows = osId.includes('Windows');
 
-    console.log('opening', req.body.url, osId, isSafari);
+    console.log('opening', req.body.url, osId);
     if (url) {
         if (isOsx) {
                 if (isSafari) mOpen(url, (err)=>{ console.error() })
@@ -88,9 +113,9 @@ app.post('/open', (req, res) => {
                 else if (isEdge) opn(url, {app: 'microsoft-edge:'+url})
                 else if (isChrome) opn(url, {app: 'chrome'})
                 else if (isIExplorer) opn(url, {app: 'iexplore'})
-                else opn(url) 
+                else opn(url)
         } else {
-                open(url)    
+                open(url)
         }
     setTimeout(() => {
             res.status(200);
@@ -98,7 +123,6 @@ app.post('/open', (req, res) => {
         }, timeout*1000)
     }
 })
-
 
 app.post('/version', (req, res) => {
     const isPatch = typeof req['body']['isPatch'] !== 'undefined' ?  req['body']['isPatch'] : false;
