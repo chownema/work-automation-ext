@@ -1,4 +1,10 @@
 # work-automation-ext
+Prereq
+- Python 2.7
+- Pip
+- Selenium installed through Pip
+- Nodejs
+- Npm
 
 Automation application to...
 - opening browsers on windows/linux/mac os

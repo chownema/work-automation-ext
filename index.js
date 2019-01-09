@@ -9,13 +9,11 @@ const cmd = require('node-cmd')
 const webdriver = require('selenium-webdriver')
 const chrome = require('selenium-webdriver/chrome')
 const firefox = require('selenium-webdriver/firefox')
-// const scriptTakeControl = require('./webdriver-scripts/take-control');
-// require('chromedriver');
 
 const PythonShell = require('python-shell')
 const winPyShellEntry = 'selenium-win/index.py'
 const winPyShellChromeDriver = 'selenium-win/chromedriver'
-const linuxPyShellChromeDriver = 'selenium-linux/chromedriver'; // has to be installed locally
+const linuxPyShellChromeDriver = 'chromedriver_linux64/chromedriver'; // has to be installed locally
 const winPyShellRequestFile = 'selenium-win/request_data.json'
 const writeFile = require('write');
 
@@ -40,7 +38,7 @@ switch (true) {
         break;
     case OS_ID.toLowerCase().includes('windows'):
         isWindows = true;
-        driverPath = winPyShellRequestFile;
+        driverPath = winPyShellChromeDriver;
         console.log('Windows chrome driver path: ' + driverPath);
         break;
 }
