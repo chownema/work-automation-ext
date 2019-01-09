@@ -1,0 +1,13 @@
+version: '2.1'
+services:
+  automation:
+    build:
+      context: .
+      dockerfile : Dockerfile
+    image: ubuntu:18.04
+    container_name: workAutomation
+    volumes:
+      - ..:/var/www/automation
+      - /var/www/automation/node_modules
+    command: bash -c "cd /var/www/automation/work-automation-ext/; npm install; npm run index.js"
+
