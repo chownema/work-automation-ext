@@ -21,7 +21,7 @@ type Request struct {
 func main() {
 	log.Println("testing the wonders of go on a chromebook")
 	http.HandleFunc("/", HandleHelloWorld)
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	log.Fatal(http.ListenAndServe("localhost:4443", nil))
 }
 
 func HandleHelloWorld(writer http.ResponseWriter, req *http.Request) {

@@ -20,7 +20,6 @@ const writeFile = require('write');
 // Constants Env Var
 const OS_ID = osName();
 
-// INIT
 let isWindows = false;
 let isOsx = false;
 let isLinux = false;
@@ -42,9 +41,7 @@ switch (true) {
         console.log('Windows chrome driver path: ' + driverPath);
         break;
 }
-// INIT
 
-//app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/webdriver', (req, res) => {
@@ -72,17 +69,14 @@ app.post('/webdriver', (req, res) => {
             console.log('The exit signal was: ' + signal);
             console.log('finished');
             const result = {
-                message : err ? err : 'finished',
+                message : err ? err : 'success finished',
                 code : code,
                 signal : signal,
-                request : req
+                request : req['body']
             };
             res.send(result);
         });
-        setTimeout(() => {
-                res.status(200);
-                res.send('opening url : '+data+command);
-            }, timeout*1000);
+
         });
 })
 
@@ -127,7 +121,7 @@ app.post('/version', (req, res) => {
     const branch = typeof req['body']['branch'] !== 'undefined' ?  req['body']['branch'] : false;
 
     if (isPatch) {
-        console.log('Patching Application...');
+        console.log('Patching Application...')
         const branchCommand = branch ? '&& git checkout '+branch+' && git pull ' : '' // get the branch and get the latest from that branch
         cmd.get('cd ../ && cd sbx-webclient-php && echo %cd% && git pull '+branchCommand+'&& npm version patch && git checkout release-candidate', (err, stdout, stderr)=> {
                 const result = {
@@ -144,6 +138,21 @@ app.post('/version', (req, res) => {
         res.status(400);
         res.send('Malformed request');
     }
+})
+
+app.post('/certificate', (req, res) => {
+    console.log('Generating Certificate...')
+    const initCommand = 'sudo certbot certonly --manual --preferred-challenges=dns --email miguel@suitebox.com --agree-tos -d mlocal.suitebox.com'
+    cmd.get(initCommand, (err, stdout, stderr)=> {
+        const result = {
+            err: err,
+            out: stdout,
+            derr: stderr
+        }
+        res.status(200);
+        res.send(result);
+        console.log('result cert', result)
+    })
 })
 
 const port = 4444

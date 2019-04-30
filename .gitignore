@@ -4,3 +4,4 @@ debug.log
 package-lock.json
 *.pyc
 *vscode
+request_data.json

@@ -1,3 +1,5 @@
+from selenium.webdriver.common.by import By
+
 class Host(object):
     @classmethod
     def login(self, **kwargs):
@@ -11,3 +13,11 @@ class Host(object):
         username_field.send_keys(username)
         password_field.send_keys(password)
         button.click()
+
+    @classmethod
+    def enter_meeting_lobby(self, **kwargs):
+        self.login(**kwargs)
+        driver = kwargs['DRIVER']
+        exit_button = driver.find_element_by_name('exit-button')
+        exit_button.click()
+        confirm_modal_buttton = driver.find_element(By.XPATH, '//button[text()="Confirm"]')
